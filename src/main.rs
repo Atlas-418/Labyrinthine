@@ -16,44 +16,19 @@ use bevy::prelude::*;
  * Remember to comment any behaviour I need to remember
  */
 
+const MAZE_WIDTH: u8  = 10;
+const MAZE_HEIGHT: u8 = 10;
+
+mod world;
+mod camera;
+use crate::world::GenWorldPlugin;
+use crate::camera::CameraPlugin;
+
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_systems(Startup, setup)
+        .add_plugins(GenWorldPlugin)
+        .add_plugins(CameraPlugin)
+        //.add_systems(Startup, )
         .run();
-}
-
-#[derive(Component)]
-struct Position {
-    x: f32,
-    y: f32,
-}
-/*
-fn do_something(mut commands: Commands) {
-    commands.spawn().insert(OrthographicCameraBundle::new_2d());
-    commands.spawn().insert(Sprite {
-        sprite: Sprite {
-            color: Color::RED,
-            ..Default::default()
-        },
-        ..Default::default()
-    });
-}
-*/
-
-pub struct testing;
-impl Plugin for tesing {
-fn setup(mut cmd: Commands) {
-        // Add a 2D camera to the scene
-        cmd.spawn().insert_bundle(OrthographicCameraBundle::new_2d());
-
-        // Spawn a colored square entity
-        cmd.spawn().insert_bundle(SpriteBundle {
-            sprite: Sprite {
-                color: Color::RED, // Set the color of the sprite
-                ..Default::default()
-            },
-            ..Default::default()
-        });
-    }
 }
