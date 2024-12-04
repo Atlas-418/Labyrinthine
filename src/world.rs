@@ -15,12 +15,6 @@ impl Plugin for GenWorldPlugin {
 	}
 }
 
-#[derive(Default)]
-struct Voxel {
-	pos: Vec3,
-	active: bool,
-}
-
 enum Side{
 	Xpositive,
 	Xnegitive,
@@ -45,7 +39,7 @@ fn add_world(
 }
 
 fn gen_world(
-	points: Vec2,
+	points: Vec<Vec<bool>>,
 ) -> Mesh {
 /*
 ! Very temporary, like, not even a solution, just a placeholder
@@ -188,8 +182,14 @@ fn gen_side(
 */
 }
 
-fn make_maze() -> Vec2 {
-	let mut maze = Vec2::new(MAZE_HEIGHT.into(), MAZE_WIDTH.into());
+fn make_maze() -> Vec<Vec<bool>> {
+	let mut maze: Vec<Vec<bool>> = Vec::new();
+  for _ in 0..MAZE_HEIGHT {
+        let mut new_row: Vec<bool> = Vec::new();
+        for _ in 0..MAZE_WIDTH {
+            new_row.push(rand::random());
+        }
+    }
 /*
     * this one is the implementation of the hunt and kill algorythm
     * it will return a vec2 containing bools that indicate the presence of a wall in that spot

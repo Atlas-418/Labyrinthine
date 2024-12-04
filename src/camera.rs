@@ -36,7 +36,8 @@ fn cam_move(
 ){
     let mut movement = Vec3::ZERO;
 /*
-//* */ see, I really want to get the match to work, but I think I'll have to settle for an if 
+! try 'match keyboard_input.pressed()' instead of 'get_pressed'
+* see, I really want to get the match to work, but I think I'll have to settle for an if 
     match keyboard_input.get_pressed() {
         KeyCode::KeyW => {
             movement += Vec3::Z * 0.9;
