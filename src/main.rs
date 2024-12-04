@@ -1,6 +1,8 @@
 use bevy::prelude::*;
 
-/* --TODO--  A very descriptive list of what the fuck I need to do
+/* 
+ *   --TODO--  
+ * A very descriptive list of what the fuck I need to do
  * Display something to a window
  * Display 3D space to a window
  * Make camera at reasonable height in 3d space
