@@ -184,7 +184,7 @@ fn gen_side(
 
 fn make_maze() -> Vec<Vec<bool>> {
 	let mut maze: Vec<Vec<bool>> = Vec::new();
-  for _ in 0..MAZE_HEIGHT {
+    for _ in 0..MAZE_HEIGHT {
         let mut new_row: Vec<bool> = Vec::new();
         for _ in 0..MAZE_WIDTH {
             new_row.push(rand::random());
