@@ -11,7 +11,7 @@ pub impl Maze for Maze {
         for i in MAZE_HEIGHT {
             let new_row: Vec<bool> = Vec::new();
             for o in MAZE_WIDTH {
-                new_row.push(rng());
+                new_row.push(random());
             }
         maze.push(new_row);
         }
