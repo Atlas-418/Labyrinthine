@@ -29,19 +29,3 @@ fn add_world(
 		Transform::from_xyz(0.0, 0.0, 0.0),
 	));
 }
-
-fn gen_world(
-	points: Vec<Vec<bool>>,
-) -> Mesh {
-    
-}
-
-fn gen_side(
-	part: Vec3,
-) {
-/* 
-    * My idea for this one is to have a function that takes the position, with the enum "Side",
-    * and then returns the plane, and all of it's neccecary data, so taht can be put into the mesh
-*/
-}
-
