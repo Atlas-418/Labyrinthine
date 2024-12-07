@@ -9,19 +9,8 @@ impl Plugin for CameraPlugin {
         app.add_systems(Update, (cam_move, cam_look));
     }
 }
-/*
-#[derive(Component)]
-struct CameraController {
-    speed: f32,
-    turn_speed: f32,
-}
 
-#[derive(Debug, Component)]
-struct Player;
-*/
-fn start_camera(
-    mut cmd: Commands,
-){
+fn start_camera(mut cmd: Commands){
     cmd.spawn((
         Camera3d::default(),
         Transform::from_xyz(0.0, 5.0, 0.0).looking_at(Vec3::ZERO, Vec3::Y),
@@ -35,6 +24,7 @@ fn cam_move(
     time: Res<Time>,
 ){
     let mut movement = Vec3::ZERO;
+    let movespeed = 1.2;
 /*
 ! try 'match keyboard_input.pressed()' instead of 'get_pressed'
 * see, I really want to get the match to work, but I think I'll have to settle for an if 
@@ -49,10 +39,16 @@ fn cam_move(
     }
 */
     if keyboard_input.pressed(KeyCode::KeyW) {
-        movement += Vec3::Z * 0.9;
+        movement -= Vec3::X * movespeed;
     }
     if keyboard_input.pressed(KeyCode::KeyS) {
-        movement -= Vec3::Z * 0.9;
+        movement += Vec3::X * movespeed;
+    }
+    if keyboard_input.pressed(KeyCode::KeyA) {
+        movement += Vec3::Z * movespeed;
+    }
+    if keyboard_input.pressed(KeyCode::KeyD) {
+        movement -= Vec3::Z * movespeed;
     }
 
     for mut transform in &mut query {
