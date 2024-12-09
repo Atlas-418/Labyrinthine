@@ -1,7 +1,7 @@
-//use rand::random;
+use rand::{random, thread_rng, Rng};
 use crate::{MAZE_HEIGHT, MAZE_WIDTH};
 
-pub fn make_maze() -> Vec<Vec<bool>> {
+pub fn make_maze() -> Vec<Vec<Option<bool>>> {
     let mut maze = Maze::initialize_maze();
 
     maze.maze
@@ -28,30 +28,37 @@ http://weblog.jamisbuck.org/2011/1/24/maze-generation-hunt-and-kill-algorithm
 */
 
 struct Maze {
-    maze: Vec<Vec<bool>>
-
-}
-
-enum State {
-    Touched,
-    Untouched,
+    maze: Vec<Vec<Option<bool>>>,
 }
 
 impl Maze{
-    // make a vector of vectors, filled with 'true
+    //! Fix this! Figure out how to put state and bool into one Vec
     fn initialize_maze() -> Self {
-        let mut maze: Vec<Vec<bool>> = Vec::new();
+        let mut maze = Vec::new();
         for _ in 0..MAZE_HEIGHT {
-            let mut new_row = Vec::new();
-            for _ in 0..MAZE_WIDTH {
-                new_row.push(true);
-            }
-            maze.push(new_row);
+            //let mut new_row = Vec::new();
+            //for _ in 0..MAZE_WIDTH {
+            //    new_row.push(None);
+            //}
+            maze.push(vec![None; MAZE_WIDTH]);
         }
-    Self { maze }
+        Self { 
+            maze, 
+        }
     }
 
-    fn random_cell() {
+    fn random_untouched() -> (bool, usize, usize) {
+        for i in 0..(MAZE_HEIGHT*MAZE_WIDTH) {
+            let y = thread_rng().gen_range(0..MAZE_HEIGHT);
+            let x = thread_rng().gen_range(0..MAZE_HEIGHT);
+            if true {
+                return (true, y, x);
+            }
+        }
+        (false, 0, 0)
+    }
+
+    fn random_neighbor(y: usize, x: usize) -> (bool, usize, usize) {
         
     }
 }
