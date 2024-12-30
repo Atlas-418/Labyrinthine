@@ -36,10 +36,13 @@ impl Maze{
     fn initialize_maze() -> Self {
         let mut maze = Vec::new();
         for _ in 0..MAZE_HEIGHT {
-            //let mut new_row = Vec::new();
-            //for _ in 0..MAZE_WIDTH {
-            //    new_row.push(None);
-            //}
+            /* // This block just pushes random values, useful for testing other things w/o a maze algorythm.
+            let mut new_row = Vec::new();
+            for _ in 0..MAZE_WIDTH {
+                new_row.push(Some(random()));
+            }
+            maze.push(new_row);
+            */
             maze.push(vec![None; MAZE_WIDTH]);
         }
         Self { 
@@ -58,7 +61,7 @@ impl Maze{
         (false, 0, 0)
     }
 
-    fn random_neighbor(y: usize, x: usize) -> (bool, usize, usize) {
+    //fn random_neighbor(y: usize, x: usize) -> (bool, usize, usize) {
         
-    }
+    //}
 }

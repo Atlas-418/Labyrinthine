@@ -24,7 +24,7 @@ fn cam_move(
     time: Res<Time>,
 ){
     let mut movement = Vec3::ZERO;
-    let movespeed = 1.2;
+    let movespeed = 3.0;
 /*
 ! try 'match keyboard_input.pressed()' instead of 'get_pressed'
 * see, I really want to get the match to work, but I think I'll have to settle for an if 
