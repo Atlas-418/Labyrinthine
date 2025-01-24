@@ -1,7 +1,6 @@
-use core::panic;
-
 use bevy::prelude::*;
 use crate::maze::make_maze;
+
 pub struct GenWorldPlugin;
 impl Plugin for GenWorldPlugin {
 	fn build(&self, app: &mut App) {
@@ -15,33 +14,32 @@ fn add_world(
 	mut meshes: ResMut<Assets<Mesh>>,
 ) {
 	let maze = make_maze();
-	for (row_i, row) in maze.iter().enumerate() {
-		for (spot_i, spot) in row.iter().enumerate() {
-			match spot {
-				Some(true) => {
+	for tile in maze {
+		match tile.is_wall {
+			true => {
+				cmd.spawn((
+					Mesh3d(meshes.add(Cuboid::new(1.0, 1.0, 1.0))),
+					MeshMaterial3d(materials.add(Color::WHITE)),
+					Transform::from_xyz(tile.x, 0.0, tile.z),
+				));
+			}
+			false => {
+				if tile.is_path {
 					cmd.spawn((
-						Mesh3d(meshes.add(Cuboid::new(1.0, 1.0, 1.0))),
-						MeshMaterial3d(materials.add(Color::WHITE)),
-						Transform::from_xyz(spot_i as f32, 0.0, row_i as f32),
+						Mesh3d(meshes.add(Plane3d::new(Vec3::Y, Vec2::splat(0.5)))),
+						MeshMaterial3d(materials.add(StandardMaterial {
+							emissive: LinearRgba::rgb(2.0, 12.0, 15.0),
+							..default()
+						})),
+						Transform::from_xyz(tile.x, -0.5, tile.z),
 					));
 				}
-				Some(false) => {
+				else {
 					cmd.spawn((
 						Mesh3d(meshes.add(Plane3d::new(Vec3::Y, Vec2::splat(0.5)))),
 						MeshMaterial3d(materials.add(Color::WHITE)),
-						Transform::from_xyz(spot_i as f32, -0.5, row_i as f32),
+						Transform::from_xyz(tile.x, -0.5, tile.z),
 					));
-					cmd.spawn((
-						PointLight {
-							shadows_enabled: false,
-							intensity: 1500.0,
-							..default()
-						},
-						Transform::from_xyz(spot_i as f32, 0.0, row_i as f32),
-					));
-				}
-				None => {
-					panic!("The maze has an unset spot")
 				}
 			}
 		}

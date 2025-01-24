@@ -14,8 +14,8 @@ TODO-
  * Remember to comment any behaviour I need to remember
  */
 
-const MAZE_WIDTH: usize  = 15; // both of these need to be odd, for the maze to properly generate
-const MAZE_HEIGHT: usize = 15; // both of these need to be odd, for the maze to properly generate
+const MAZE_WIDTH:  usize = 15; // both of these need to be odd, for the maze to properly generate
+const MAZE_HEIGHT: usize = 15;
 
 //mod world;
 //use crate::world::GenWorldPlugin;

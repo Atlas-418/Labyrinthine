@@ -1,16 +1,10 @@
-use rand::{random, thread_rng, Rng};
-use crate::{MAZE_HEIGHT, MAZE_WIDTH};
-
-pub fn make_maze() -> Vec<Vec<Option<bool>>> {
-    let mut maze = Maze::initialize_maze();
-
-    maze.maze
-}
-
 /*
 * my implementation of the hunt & kill algorythm
 blog that I based things off of:
 http://weblog.jamisbuck.org/2011/1/24/maze-generation-hunt-and-kill-algorithm
+
+! A lot of this is going to be terrible. I need to fix it.
+! I just wanted something that would get the job done, so I could continue getting everything to work.
 
 * steps for algorythm:
     1. Initialize the grid of cells (all walls initially).
@@ -27,41 +21,39 @@ http://weblog.jamisbuck.org/2011/1/24/maze-generation-hunt-and-kill-algorithm
     5. End when all cells are visited.
 */
 
-struct Maze {
-    maze: Vec<Vec<Option<bool>>>,
+#[allow(unused_imports)]
+use std::option;
+use rand::random;
+use crate::{MAZE_HEIGHT, MAZE_WIDTH};
+
+pub fn make_maze() -> Vec<Tile> {
+    let mut maze: Vec<Tile> = Vec::new();
+    for x in 0..MAZE_WIDTH {
+        for z in 0..MAZE_HEIGHT {
+            maze.push(Tile::new_tile(x as f32, z as f32, random()))
+        }
+    }
+    maze
 }
 
-impl Maze{
-    //! Fix this! Figure out how to put state and bool into one Vec
-    fn initialize_maze() -> Self {
-        let mut maze = Vec::new();
-        for _ in 0..MAZE_HEIGHT {
-            /* // This block just pushes random values, useful for testing other things w/o a maze algorythm.
-            let mut new_row = Vec::new();
-            for _ in 0..MAZE_WIDTH {
-                new_row.push(Some(random()));
-            }
-            maze.push(new_row);
-            */
-            maze.push(vec![None; MAZE_WIDTH]);
-        }
-        Self { 
-            maze, 
+pub struct Tile {
+    pub x: f32,
+    pub z: f32,
+    pub is_wall: bool,
+    pub is_path: bool,
+    touched: bool,
+    neigbors: Vec<Tile>
+}
+
+impl Tile {
+    fn new_tile(x: f32, z: f32, is_wall: bool) -> Self {
+        Tile { 
+            x, 
+            z, 
+            is_wall, 
+            is_path: true, 
+            touched: false, 
+            neigbors: Vec::new()
         }
     }
-
-    fn random_untouched() -> (bool, usize, usize) {
-        for i in 0..(MAZE_HEIGHT*MAZE_WIDTH) {
-            let y = thread_rng().gen_range(0..MAZE_HEIGHT);
-            let x = thread_rng().gen_range(0..MAZE_HEIGHT);
-            if true {
-                return (true, y, x);
-            }
-        }
-        (false, 0, 0)
-    }
-
-    //fn random_neighbor(y: usize, x: usize) -> (bool, usize, usize) {
-        
-    //}
 }
