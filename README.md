@@ -1,5 +1,3 @@
-# !!!THIS IS NOT IN ACTIVE DEVELOPMENT, I NEED TO MAKE A WHOLE DIFFERENT THING FOR THE COMPETITION THIS WAS ORIGINALLY FOR, SO I'LL WORK ON THIS LATER!!!
-
 # Labyrinthine
 
 A project made with Bevy, by Atlas-418.
@@ -17,15 +15,15 @@ My goals:
 - [ ] figure out how to incorperate said moral dilemmas into the maze, and make it solevable via hints
 
 And now the steps to achive those goals:
-- [ ] Learn the Bevy API
 - [ ] Get collisions and rendering
-- [ ] Get a first person camera working
-- [ ] move the first person camera around
+- [X] Get a first person camera working
+- [X] move the first person camera around
 - [ ] Figure out how to proceduraly generate a maze (check out [this blog](<https://professor-l.github.io/mazes/>), will most likely use Hunt and Kill)
-- [ ] GEnerate a voxel mesh with the procedural maze
+- [ ] Generate a voxel mesh with the procedural maze
 
 Things we need to make it through reigionals:
-- [ ] Ability to move
+- [ ] A maze
+- [X] Ability to move
 - [ ] Moral dilemmas with multiple outcomes
 - [ ] Allow the user to choose between the outcomes somehow
 - [ ] Accessability options

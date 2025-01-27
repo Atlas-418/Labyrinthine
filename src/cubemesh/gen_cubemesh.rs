@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use crate::maze::make_maze;
+use crate::maze::*;
 
 pub struct GenWorldPlugin;
 impl Plugin for GenWorldPlugin {
@@ -13,32 +13,32 @@ fn add_world(
 	mut materials: ResMut<Assets<StandardMaterial>>,
 	mut meshes: ResMut<Assets<Mesh>>,
 ) {
-	let maze = make_maze();
-	for tile in maze {
+	let maze: Maze = Maze::make_maze(MazeAlgorithm::HuntAndKill);
+	for tile in maze.tiles {
 		match tile.is_wall {
 			true => {
 				cmd.spawn((
-					Mesh3d(meshes.add(Cuboid::new(1.0, 1.0, 1.0))),
+					Mesh3d(meshes.add(Cuboid::new(1.0, 3.0, 1.0))),
 					MeshMaterial3d(materials.add(Color::WHITE)),
-					Transform::from_xyz(tile.x, 0.0, tile.z),
+					Transform::from_translation(Vec3::new(tile.position.x, 1.0, tile.position.y)),
 				));
 			}
 			false => {
-				if tile.is_path {
+				if tile.illuminated {
 					cmd.spawn((
 						Mesh3d(meshes.add(Plane3d::new(Vec3::Y, Vec2::splat(0.5)))),
 						MeshMaterial3d(materials.add(StandardMaterial {
 							emissive: LinearRgba::rgb(2.0, 12.0, 15.0),
 							..default()
 						})),
-						Transform::from_xyz(tile.x, -0.5, tile.z),
+						Transform::from_translation(Vec3::new(tile.position.x, -0.5, tile.position.y)),
 					));
 				}
 				else {
 					cmd.spawn((
 						Mesh3d(meshes.add(Plane3d::new(Vec3::Y, Vec2::splat(0.5)))),
 						MeshMaterial3d(materials.add(Color::WHITE)),
-						Transform::from_xyz(tile.x, -0.5, tile.z),
+						Transform::from_translation(Vec3::new(tile.position.x, -0.5, tile.position.y)),
 					));
 				}
 			}

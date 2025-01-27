@@ -34,7 +34,7 @@ fn cam_move(
     time: Res<Time>,
 ){
     let mut movement = Vec3::ZERO;
-    let movespeed = 3.0;
+    let movespeed = 1.0;
 
     for mut transform in &mut query {
 
@@ -73,7 +73,7 @@ fn cam_move(
         if keyboard_input.pressed(KeyCode::ShiftLeft) {
             movement -= Vec3:: Y * movespeed;
         }
-    
+
         transform.translation += movement * time.delta_secs();
     }
 }
@@ -85,7 +85,7 @@ fn cam_rotate(
 ) {
     let mut yaw = 0.0;   // Rotation around the Y-axis
     let mut pitch = 0.0; // Rotation around the X-axis
-    let rotation_speed = 1.5; // Rotation speed (radians per second)
+    let rotation_speed = 1.0; // Rotation speed (radians per second)
 
     // Yaw (left and right rotation) using A and D keys
     if keyboard_input.pressed(KeyCode::ArrowLeft) {

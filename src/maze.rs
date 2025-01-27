@@ -23,37 +23,120 @@ http://weblog.jamisbuck.org/2011/1/24/maze-generation-hunt-and-kill-algorithm
 
 #[allow(unused_imports)]
 use std::option;
-use rand::random;
+use bevy::math::Vec2;
+#[allow(unused_imports)]
+use rand::{random, thread_rng, seq::SliceRandom};
+#[allow(unused_imports)]
 use crate::{MAZE_HEIGHT, MAZE_WIDTH};
 
-pub fn make_maze() -> Vec<Tile> {
-    let mut maze: Vec<Tile> = Vec::new();
-    for x in 0..MAZE_WIDTH {
-        for z in 0..MAZE_HEIGHT {
-            maze.push(Tile::new_tile(x as f32, z as f32, random()))
-        }
-    }
-    maze
+#[allow(dead_code)]
+pub struct Maze {
+    pub tiles: Vec<Tile>,
+    pub width: u64,
+    pub height: u64,
+    pub start_position: Vec2,
+    pub algorythm: String,
+    illumination_percent: f32,
 }
 
+pub enum MazeAlgorithm {
+    HuntAndKill,
+}
+
+impl Maze{
+
+    pub fn make_maze (maze_type: MazeAlgorithm) -> Self {
+        match maze_type {
+            MazeAlgorithm::HuntAndKill => Maze::hunt_and_kill(15, 15)
+        }
+    }
+
+    fn find_neighbors (&mut self) {
+        let directions: [Vec2; 4] = [
+            Vec2{ x: -1.0, y: 0.0 }, // Left
+            Vec2{ x: 1.0, y: 0.0},  // Right
+            Vec2{ x: 0.0, y: 1.0}, // Up
+            Vec2{ x: 0.0, y: -1.0},  // Down
+        ];
+
+        for tile in self.tiles.iter_mut() {
+            for direction in directions {
+                tile.neighbors.push(tile.position + direction)
+            }
+        }
+    }
+
+    pub fn return_wall_places(&self) -> Vec<Vec2> {
+        let mut walls: Vec<Vec2> = Vec::new();
+        for tile in &self.tiles {
+            if tile.is_wall {
+                walls.push(tile.position);
+            }
+        }
+        walls
+    }
+
+    fn new_maze (width: u64, height: u64, algorythm: String) -> Self {
+        let mut tiles = Vec::new();
+        for x in 0..height {
+            for z in 0..width {
+                tiles.push(Tile::new_tile(x as f32, z as f32, true, false))
+            }
+        }
+        let mut maze: Maze = Maze { 
+            tiles, 
+            width, 
+            height, 
+            start_position: Vec2 { x: 0.5, y: 0.5 }, 
+            algorythm, 
+            illumination_percent: 1.0 
+        };
+        maze.find_neighbors();
+        maze
+    }
+
+    fn hunt_and_kill (width: u64, height: u64) -> Maze {
+        let mut maze = Maze::new_maze(width, height, "Hunt and Kill".to_string());
+        for mut tile in &mut maze.tiles {
+            //tile.toggle_wall();
+        }
+        maze
+    }
+}
+
+#[allow(dead_code)]
 pub struct Tile {
-    pub x: f32,
-    pub z: f32,
+    pub position: Vec2,
     pub is_wall: bool,
-    pub is_path: bool,
+    is_path: bool,
+    pub illuminated: bool,
+    num_adjacent_paths: u8,
     touched: bool,
-    neigbors: Vec<Tile>
+    neighbors: Vec<Vec2>
 }
 
 impl Tile {
-    fn new_tile(x: f32, z: f32, is_wall: bool) -> Self {
+    fn new_tile (x: f32, y: f32, is_wall: bool, is_path: bool) -> Self {
         Tile { 
-            x, 
-            z, 
+            position: Vec2 { x, y },
             is_wall, 
-            is_path: true, 
+            is_path,
+            illuminated: false,
+            num_adjacent_paths: 0,
             touched: false, 
-            neigbors: Vec::new()
+            neighbors: Vec::new()
         }
+    }
+
+    fn toggle_touched(&mut self) {
+        self.touched = !self.touched
+    }
+
+    fn toggle_wall(&mut self) {
+        self.is_wall = !self.is_wall
+    }
+
+    fn toggle_illuminated(&mut self) {
+        self.illuminated = !self.illuminated
     }
 }
