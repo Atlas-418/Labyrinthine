@@ -58,10 +58,13 @@ impl Maze{
             Vec2{ x: 0.0, y: 1.0}, // Up
             Vec2{ x: 0.0, y: -1.0},  // Down
         ];
-
+        let tiles = &self.tiles;
         for tile in self.tiles.iter_mut() {
             for direction in directions {
-                tile.neighbors.push(tile.position + direction)
+                let spot = tile.position + direction;
+                if tiles.iter().any(|&i| i.position == spot) {
+                    tile.neighbors.push(tile.position + direction)
+                }
             }
         }
     }
