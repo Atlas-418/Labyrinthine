@@ -12,9 +12,9 @@ TODO-
  */
 
 #[allow(dead_code)]
-const MAZE_WIDTH:  usize = 25; // both of these need to be odd, for the maze to properly generate
+const MAZE_WIDTH:  u64 = 25; // both of these need to be odd, for the maze to properly generate
 #[allow(dead_code)]
-const MAZE_HEIGHT: usize = 25;
+const MAZE_HEIGHT: u64 = 25;
 
 //mod world;
 //use crate::world::GenWorldPlugin;

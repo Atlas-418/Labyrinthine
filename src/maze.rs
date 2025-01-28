@@ -39,15 +39,18 @@ pub struct Maze {
     illumination_percent: f32,
 }
 
+#[allow(dead_code)]
 pub enum MazeAlgorithm {
     HuntAndKill,
+    Random,
 }
 
 impl Maze{
 
     pub fn make_maze (maze_type: MazeAlgorithm) -> Self {
         match maze_type {
-            MazeAlgorithm::HuntAndKill => Maze::hunt_and_kill(15, 15)
+            MazeAlgorithm::HuntAndKill => Maze::hunt_and_kill(MAZE_WIDTH, MAZE_HEIGHT),
+            MazeAlgorithm::Random => Maze::random(MAZE_WIDTH, MAZE_HEIGHT)
         }
     }
 
@@ -62,13 +65,16 @@ impl Maze{
         for tile in self.tiles.iter_mut() {
             for direction in directions {
                 let spot = tile.position + direction;
-                if tiles.iter().any(|&i| i.position == spot) {
+                if !(spot.x > self.width as f32) && !(spot.x < 0.0) && !(spot.y > self.height as f32) && !(spot.y < 0.0) {
+                    // if the thingymabobber is valid, put it into the other thingymabobber
                     tile.neighbors.push(tile.position + direction)
                 }
             }
         }
     }
 
+    /* 
+    * making this function feels kinda like a fever dream, I don't know what, or why it is.
     pub fn return_wall_places(&self) -> Vec<Vec2> {
         let mut walls: Vec<Vec2> = Vec::new();
         for tile in &self.tiles {
@@ -78,6 +84,7 @@ impl Maze{
         }
         walls
     }
+    */
 
     fn new_maze (width: u64, height: u64, algorythm: String) -> Self {
         let mut tiles = Vec::new();
@@ -102,6 +109,18 @@ impl Maze{
         let mut maze = Maze::new_maze(width, height, "Hunt and Kill".to_string());
         for mut tile in &mut maze.tiles {
             //tile.toggle_wall();
+        }
+        maze
+    }
+
+    fn random (width: u64, height: u64) -> Maze {
+        let mut maze = Maze::new_maze(width, height, "Hunt and Kill".to_string());
+        for tile in &mut maze.tiles {
+            if random() {
+                tile.toggle_wall();
+            }
+            //? Uncomment this next line to make the floor glow
+            //tile.toggle_illuminated();
         }
         maze
     }
