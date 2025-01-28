@@ -1,4 +1,6 @@
 use bevy::{core_pipeline::bloom::Bloom, prelude::*};
+
+use crate::maze::*;
 //use bevy::input::*;
 //use bevy::transform;
 
@@ -23,8 +25,34 @@ fn start_camera(mut cmd: Commands){
             intensity: 50000.0,
             ..default()
         },
-        Transform::from_xyz(0.0, 0.0, 0.0).looking_at(Vec3{x: 1.0, y: 0.0, z: 0.0}, Vec3::Y),
+        Transform::from_xyz(crate::MAZE.start_position.x, 0.0, crate::MAZE.start_position.y).looking_at(Vec3{x: 1.0, y: 0.0, z: 0.0}, Vec3::Y),
     ));
+}
+
+fn get_wall_coords() -> Vec<Vec3> {
+    let mut walls: Vec<Vec3> = Vec::new();
+    for tile in &crate::MAZE.tiles {
+        if tile.is_wall {
+            walls.push( Vec3{ x: tile.position.x, y: 1.0, z: tile.position.y } );
+        }
+    }
+    walls
+}
+
+fn check_for_clipping(position: Vec3, walls: Vec<Vec3>) -> bool {
+    let mut is_clipping = false;
+    for tile in &crate::MAZE.tiles {
+        if ( tile.is_wall &&
+            (position.x - tile.position.x).abs() <= 0.6 &&
+            (position.y - 1.0            ).abs() <= 1.6 &&
+            (position.z - tile.position.y).abs() <= 0.6 
+        ) | (
+            (position.y - -0.5           ).abs() <= 0.1
+        ) | is_clipping {
+            is_clipping = true;
+        }
+    }
+    is_clipping
 }
 
 fn cam_move(
@@ -33,6 +61,9 @@ fn cam_move(
     mut query: Query<&mut Transform, With<Camera3d>>,
     time: Res<Time>,
 ){
+
+    let walls = get_wall_coords();
+
     let mut movement = Vec3::ZERO;
     let movespeed = 1.0;
 
@@ -74,7 +105,9 @@ fn cam_move(
             movement -= Vec3:: Y * movespeed;
         }
 
-        transform.translation += movement * time.delta_secs();
+        if !check_for_clipping(transform.translation + (movement * time.delta_secs()), walls.clone()) {
+            transform.translation += movement * time.delta_secs();
+        }
     }
 }
 

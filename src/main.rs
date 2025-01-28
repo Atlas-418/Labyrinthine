@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+
 /* 
 TODO-  
 ! A very descriptive list of what the fuck I need to do
@@ -11,18 +11,29 @@ TODO-
  * Remember to comment any behaviour I need to remember
  */
 
+
+mod camera;
+mod maze;
+mod cubemesh{pub mod gen_cubemesh;}
+
+use bevy::prelude::*;
+use crate::maze::*;
+use crate::camera::CameraPlugin;
+use crate::cubemesh::gen_cubemesh::GenWorldPlugin;
+
+
 #[allow(dead_code)]
 const MAZE_WIDTH:  u64 = 25; // both of these need to be odd, for the maze to properly generate
 #[allow(dead_code)]
 const MAZE_HEIGHT: u64 = 25;
 
-//mod world;
-//use crate::world::GenWorldPlugin;
-mod camera;
-use crate::camera::CameraPlugin;
-mod maze;
-mod cubemesh{pub mod gen_cubemesh;}
-use crate::cubemesh::gen_cubemesh::GenWorldPlugin;
+
+#[macro_use]
+extern crate lazy_static;
+
+lazy_static! {
+    pub static ref MAZE: Maze = Maze::make_maze(MazeAlgorithm::Random);
+}
 
 fn main() {
     println!("Starting");

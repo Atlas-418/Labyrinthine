@@ -22,12 +22,11 @@ And now the steps to achive those goals:
 - [ ] Generate a voxel mesh with the procedural maze
 
 Things we need to make it through reigionals:
-- [ ] A maze
 - [X] Ability to move
 - [ ] Moral dilemmas with multiple outcomes
 - [ ] Allow the user to choose between the outcomes somehow
-- [ ] Accessability options
-- [ ] Title screen
+- [ ] Accessability options (?)
+- [ ] Title screen / Intorduction to game
 
 And some random ideas I could implement: **Gimme judgement on these ideas.**
 * Randomized colour pallete (use OKlab to generate?)

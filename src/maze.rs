@@ -21,13 +21,11 @@ http://weblog.jamisbuck.org/2011/1/24/maze-generation-hunt-and-kill-algorithm
     5. End when all cells are visited.
 */
 
-#[allow(unused_imports)]
-use std::option;
 use bevy::math::Vec2;
 #[allow(unused_imports)]
 use rand::{random, thread_rng, seq::SliceRandom};
-#[allow(unused_imports)]
 use crate::{MAZE_HEIGHT, MAZE_WIDTH};
+
 
 #[allow(dead_code)]
 pub struct Maze {
@@ -46,7 +44,6 @@ pub enum MazeAlgorithm {
 }
 
 impl Maze{
-
     pub fn make_maze (maze_type: MazeAlgorithm) -> Self {
         match maze_type {
             MazeAlgorithm::HuntAndKill => Maze::hunt_and_kill(MAZE_WIDTH, MAZE_HEIGHT),
@@ -56,12 +53,11 @@ impl Maze{
 
     fn find_neighbors (&mut self) {
         let directions: [Vec2; 4] = [
-            Vec2{ x: -1.0, y: 0.0 }, // Left
-            Vec2{ x: 1.0, y: 0.0},  // Right
-            Vec2{ x: 0.0, y: 1.0}, // Up
-            Vec2{ x: 0.0, y: -1.0},  // Down
+            Vec2{ x: -1.0, y: 0.0 },    // Left
+            Vec2{ x: 1.0, y: 0.0},      // Right
+            Vec2{ x: 0.0, y: 1.0},      // Up
+            Vec2{ x: 0.0, y: -1.0},     // Down
         ];
-        let tiles = &self.tiles;
         for tile in self.tiles.iter_mut() {
             for direction in directions {
                 let spot = tile.position + direction;
@@ -119,8 +115,15 @@ impl Maze{
             if random() {
                 tile.toggle_wall();
             }
-            //? Uncomment this next line to make the floor glow
-            //tile.toggle_illuminated();
+            if random() {
+                tile.toggle_illuminated();
+            }
+        }
+        for tile in &maze.tiles {
+            if !tile.is_wall {
+                maze.start_position = tile.position;
+                break
+            }
         }
         maze
     }
