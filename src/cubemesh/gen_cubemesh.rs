@@ -16,7 +16,7 @@ fn add_world(
 
 		let mut material: StandardMaterial =  StandardMaterial{ base_color: Color::WHITE, emissive: LinearRgba::new(0.125, 0.1, 0.1, 1.0), ..default() };
 		if tile.illuminated {
-			material = StandardMaterial{ base_color: Color::WHITE, emissive: LinearRgba::new(-0.075 , -0.075, -0.075, 1.0), ..default() };
+			material = StandardMaterial{ base_color: Color::srgb(0.5, 1.0, 0.75), emissive: LinearRgba::new(0.125 , 0.1, 0.1, 1.0), ..default() };
 		}
 
 		match tile.is_wall {

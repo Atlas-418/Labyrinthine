@@ -29,17 +29,7 @@ fn start_camera(mut cmd: Commands){
     ));
 }
 
-fn get_wall_coords() -> Vec<Vec3> {
-    let mut walls: Vec<Vec3> = Vec::new();
-    for tile in &crate::MAZE.tiles {
-        if tile.is_wall {
-            walls.push( Vec3{ x: tile.position.x, y: 1.0, z: tile.position.y } );
-        }
-    }
-    walls
-}
-
-fn check_for_clipping(position: Vec3, walls: Vec<Vec3>) -> bool {
+fn check_for_clipping(position: Vec3) -> bool {
     let mut is_clipping = false;
     for tile in &crate::MAZE.tiles {
         if ( tile.is_wall &&
@@ -61,9 +51,6 @@ fn cam_move(
     mut query: Query<&mut Transform, With<Camera3d>>,
     time: Res<Time>,
 ){
-
-    let walls = get_wall_coords();
-
     let mut movement = Vec3::ZERO;
     let movespeed = 1.0;
 
@@ -105,7 +92,7 @@ fn cam_move(
             movement -= Vec3:: Y * movespeed;
         }
 
-        if !check_for_clipping(transform.translation + (movement * time.delta_secs()), walls.clone()) {
+        if !check_for_clipping(transform.translation + (movement * time.delta_secs())) {
             transform.translation += movement * time.delta_secs();
         }
     }
