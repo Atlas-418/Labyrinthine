@@ -8,7 +8,7 @@ pub struct CameraPlugin;
 impl Plugin for CameraPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, start_camera);
-        app.add_systems(Update, (cam_move, cam_rotate));
+        app.add_systems(Update, (cam_move, cam_rotate, update_time_display));
     }
 }
 
@@ -22,11 +22,29 @@ fn start_camera(mut cmd: Commands){
         Bloom::NATURAL,
         PointLight {
             shadows_enabled: false,
-            intensity: 50000.0,
+            intensity: 70000.0,
             ..default()
         },
         Transform::from_xyz(crate::MAZE.start_position.x, 0.0, crate::MAZE.start_position.y).looking_at(Vec3{x: 1.0, y: 0.0, z: 0.0}, Vec3::Y),
     ));
+    cmd.spawn((
+        Text::new("Time elapsed: "),
+        TextFont { ..default() },
+        Node {
+            position_type: PositionType::Absolute,
+            top: Val::Px(12.0),
+            left: Val::Px(12.0),
+            ..default()
+        }
+    ));
+}
+
+fn update_time_display (
+    mut text: Single<&mut Text, With<Text>>,
+    time: Res<Time>,
+) {
+    let display_text: String = format!("Time elapsed: {:.3} seconds", time.elapsed_secs_f64()).to_string();
+    text.0 = display_text;
 }
 
 fn check_for_clipping(position: Vec3) -> bool {

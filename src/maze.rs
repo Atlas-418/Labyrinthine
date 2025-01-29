@@ -37,17 +37,18 @@ pub struct Maze {
     illumination_percent: f32,
 }
 
-#[allow(dead_code)]
 pub enum MazeAlgorithm {
     HuntAndKill,
     Random,
+    RandomIllumination,
 }
 
 impl Maze{
     pub fn make_maze (maze_type: MazeAlgorithm) -> Self {
         match maze_type {
             MazeAlgorithm::HuntAndKill => Maze::hunt_and_kill(MAZE_WIDTH, MAZE_HEIGHT),
-            MazeAlgorithm::Random => Maze::random(MAZE_WIDTH, MAZE_HEIGHT)
+            MazeAlgorithm::Random => Maze::random(MAZE_WIDTH, MAZE_HEIGHT),
+            MazeAlgorithm::RandomIllumination => Maze::random_illumination(MAZE_WIDTH, MAZE_HEIGHT),
         }
     }
 
@@ -110,7 +111,23 @@ impl Maze{
     }
 
     fn random (width: u64, height: u64) -> Maze {
-        let mut maze = Maze::new_maze(width, height, "Hunt and Kill".to_string());
+        let mut maze = Maze::new_maze(width, height, "random".to_string());
+        for tile in &mut maze.tiles {
+            if random() {
+                tile.toggle_wall();
+            }
+        }
+        for tile in &maze.tiles {
+            if !tile.is_wall {
+                maze.start_position = tile.position;
+                break
+            }
+        }
+        maze
+    }
+
+    fn random_illumination (width: u64, height: u64) -> Maze {
+        let mut maze = Maze::new_maze(width, height, "Random w/ illumination".to_string());
         for tile in &mut maze.tiles {
             if random() {
                 tile.toggle_wall();
@@ -127,6 +144,7 @@ impl Maze{
         }
         maze
     }
+
 }
 
 #[allow(dead_code)]

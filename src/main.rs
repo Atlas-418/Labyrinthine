@@ -22,9 +22,7 @@ use crate::camera::CameraPlugin;
 use crate::cubemesh::gen_cubemesh::GenWorldPlugin;
 
 
-#[allow(dead_code)]
 const MAZE_WIDTH:  u64 = 25; // both of these need to be odd, for the maze to properly generate
-#[allow(dead_code)]
 const MAZE_HEIGHT: u64 = 25;
 
 

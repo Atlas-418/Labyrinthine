@@ -14,7 +14,7 @@ fn add_world(
 ) {
 	for tile in &crate::MAZE.tiles {
 
-		let mut material: StandardMaterial =  StandardMaterial{ base_color: Color::WHITE, emissive: LinearRgba::new(0.125, 0.1, 0.1, 1.0), ..default() };
+		let mut material: StandardMaterial =  StandardMaterial{ base_color: Color::WHITE, emissive: LinearRgba::new(-0.001, -0.001, -0.001, 1.0), ..default() };
 		if tile.illuminated {
 			material = StandardMaterial{ base_color: Color::srgb(0.5, 1.0, 0.75), emissive: LinearRgba::new(0.125 , 0.1, 0.1, 1.0), ..default() };
 		}
