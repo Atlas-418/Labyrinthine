@@ -15,22 +15,27 @@ TODO-
 mod camera;
 mod maze;
 mod cubemesh{pub mod gen_cubemesh;}
+mod questions;
 
 use bevy::prelude::*;
+use crate::questions::{Question, give_questions};
 use crate::maze::*;
 use crate::camera::CameraPlugin;
 use crate::cubemesh::gen_cubemesh::GenWorldPlugin;
 
 
-const MAZE_WIDTH:  u64 = 25; // both of these need to be odd, for the maze to properly generate
-const MAZE_HEIGHT: u64 = 25;
+const MAZE_WIDTH:   u64 = 30;
+const MAZE_HEIGHT:  u64 = 30;
+#[allow(dead_code)]
+const MAX_QUESTIONS: usize = 5;
 
 
 #[macro_use]
 extern crate lazy_static;
 
 lazy_static! {
-    pub static ref MAZE: Maze = Maze::make_maze(MazeAlgorithm::Random);
+    pub static ref MAZE: Maze = Maze::make_maze(MazeAlgorithm::HuntAndKill);
+    pub static ref QUESTIONS: Vec<Question> = give_questions(MAZE.questions);
 }
 
 fn main() {

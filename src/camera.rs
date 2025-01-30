@@ -1,8 +1,4 @@
-use bevy::{core_pipeline::bloom::Bloom, prelude::*};
-
-use crate::maze::*;
-//use bevy::input::*;
-//use bevy::transform;
+use bevy::{core_pipeline::bloom::Bloom, math::vec3, prelude::*};
 
 pub struct CameraPlugin;
 impl Plugin for CameraPlugin {
@@ -19,17 +15,16 @@ fn start_camera(mut cmd: Commands){
             hdr: true, // HDR is required for bloom
             ..default()
         },
-        Bloom::NATURAL,
+        //Bloom::NATURAL,  // do we even like having bloom?
         PointLight {
             shadows_enabled: false,
-            intensity: 70000.0,
+            intensity: 700000.0,
             ..default()
         },
         Transform::from_xyz(crate::MAZE.start_position.x, 0.0, crate::MAZE.start_position.y).looking_at(Vec3{x: 1.0, y: 0.0, z: 0.0}, Vec3::Y),
     ));
     cmd.spawn((
-        Text::new("Time elapsed: "),
-        TextFont { ..default() },
+        Text::new("Scoring: \n   Time elapsed: \n   Morality score: \n   Choices made: \n\nMaze data: \n   Generation type: \n   Dimensions: \n   Total questions: \n "),
         Node {
             position_type: PositionType::Absolute,
             top: Val::Px(12.0),
@@ -43,32 +38,44 @@ fn update_time_display (
     mut text: Single<&mut Text, With<Text>>,
     time: Res<Time>,
 ) {
-    let display_text: String = format!("Time elapsed: {:.3} seconds", time.elapsed_secs_f64()).to_string();
+    let morality = crate::MAZE.morality * 100.0;
+    let elapsed_time = time.elapsed_secs_f64();
+    let choices_made = crate::MAZE.choices_made;
+    let gen_type = &crate::MAZE.algorythm;
+    let width = crate::MAZE.width;
+    let height =  crate::MAZE.height;
+    let total_questions = crate::MAZE.questions;
+
+    let display_text: String = format!("Scoring: \n   Time elapsed: {:.2} \n   Morality: {:.1}% \n   Choices made: {choices_made} \n\nMaze data: \n   Generation type: {gen_type} \n   Dimensions: {width} * {height} \n   Total questions: {total_questions}\n", elapsed_time, morality).to_string();
     text.0 = display_text;
 }
 
 fn check_for_clipping(position: Vec3) -> bool {
     let mut is_clipping = false;
     for tile in &crate::MAZE.tiles {
-        if ( tile.is_wall &&
+
+        // * hell in a boolean. basically just checks if the camera is trying to go within a 1 wide square of any wall's position
+        // also checks vertical and whatnot, but who gives a shit?
+        let is_position_valid: bool = (
+            tile.is_wall &&
             (position.x - tile.position.x).abs() <= 0.6 &&
-            (position.y - 1.0            ).abs() <= 1.6 &&
+            (position.y - 1.0).abs() <= 1.6 &&
             (position.z - tile.position.y).abs() <= 0.6 
-        ) | (
-            (position.y - -0.5           ).abs() <= 0.1
-        ) | is_clipping {
-            is_clipping = true;
-        }
+            ) | ( 
+                (position.y - -0.5).abs() <= 0.1 
+            );
+
+        is_clipping = is_position_valid | is_clipping;
     }
     is_clipping
 }
 
-fn cam_move(
+fn cam_move (
     keyboard_input: Res<ButtonInput<KeyCode>>,
     //cam_query: Query<&Camera3d>,
     mut query: Query<&mut Transform, With<Camera3d>>,
     time: Res<Time>,
-){
+) {
     let mut movement = Vec3::ZERO;
     let movespeed = 1.0;
 
@@ -109,7 +116,9 @@ fn cam_move(
         if keyboard_input.pressed(KeyCode::ShiftLeft) {
             movement -= Vec3:: Y * movespeed;
         }
-
+        if check_for_clipping(transform.translation) {
+            transform.translation = vec3(-1.0, 0.0, -1.0)
+        }
         if !check_for_clipping(transform.translation + (movement * time.delta_secs())) {
             transform.translation += movement * time.delta_secs();
         }

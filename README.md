@@ -15,35 +15,24 @@ My goals:
 - [ ] figure out how to incorperate said moral dilemmas into the maze, and make it solevable via hints
 
 And now the steps to achive those goals:
-- [ ] Get collisions and rendering
+- [X] Get collisions and rendering
 - [X] Get a first person camera working
 - [X] move the first person camera around
 - [ ] Figure out how to proceduraly generate a maze (check out [this blog](<https://professor-l.github.io/mazes/>), will most likely use Hunt and Kill)
-- [ ] Generate a voxel mesh with the procedural maze
+- [X] Generate a 3D world with the procedural maze
 
 Things we need to make it through reigionals:
 - [X] Ability to move
 - [ ] Moral dilemmas with multiple outcomes
 - [ ] Allow the user to choose between the outcomes somehow
 - [ ] Accessability options (?)
-- [ ] Title screen / Intorduction to game
+- [ ] Title screen / Introduction to game
 
 And some random ideas I could implement: **Gimme judgement on these ideas.**
-* Randomized colour pallete (use OKlab to generate?)
-* Various different shader effects
-  * incorperate into puzzles?
-  * manifold garden-esque (gooch shading)
-  * Chromatic abberation
-  * Toon shading
-  * B&W w/ lines only
-  * ASCII render? (would be a big challenge lol)
-* randomized texture on walls
-  * noise map?
-  * think naissance
 * For the hints, consider how to make hints
-  * option 1: have the maze build itself around a solution with a written riddles
-  * option 2: write a riddle for each random maze
-    * integrate chatGPT to write the riddles
-    * have something with variables, somehow. let Jonah come up with it.
-  * option 3: Just have a set maze. No random generation, just have a single map.
-    * this is lame, and would loose us considerable points, no matter who the judge is.
+  * option 1: write a riddle for each random maze
+    * choose a set number of junctions along solution paths, apply question to each junction.
+  * option 2: Just have a set maze. No random generation, just have a single map.
+    * this is lame.
+
+# Documentation
