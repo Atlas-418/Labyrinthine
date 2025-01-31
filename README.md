@@ -9,23 +9,26 @@ Labyrinthine is going to be a short game, in which the player solves riddles to 
 I plan on heavily focusing on rendering, and making sure the game runs smoothly, and I'll let jonah (my partner for this project) figure out storyline and whatnot. I'm the nerd. he's a nerd too, but this time, he gets to do creative stuff.
 
 ## What do I want to do with it? (A TODO list for me)
-My goals:
+## My goals:
 - [ ] Procedural generation of the maze
 - [ ] multiple paths, guided by riddles. Each path has it's own moral dilemma for following it
 - [ ] figure out how to incorperate said moral dilemmas into the maze, and make it solevable via hints
 
-And now the steps to achive those goals:
+### And now the steps to achive my goals:
 - [X] Get collisions and rendering
 - [X] Get a first person camera working
 - [X] move the first person camera around
 - [ ] Figure out how to proceduraly generate a maze (check out [this blog](<https://professor-l.github.io/mazes/>), will most likely use Hunt and Kill)
 - [X] Generate a 3D world with the procedural maze
+- [ ] Put the riddles into the maze somehow
+* Idea: Take list of junctions, apply set ammount of riddles to set ammount of junctions
 
 Things we need to make it through reigionals:
 - [X] Ability to move
-- [ ] Moral dilemmas with multiple outcomes
-- [ ] Allow the user to choose between the outcomes somehow
+- [X] Moral dilemmas with multiple outcomes
+- [ ] Present the user with dilemma, and allow them to choose between the outcomes somehow
 - [ ] Accessability options (?)
+* Idea: high contrast mode
 - [ ] Title screen / Introduction to game
 
 And some random ideas I could implement: **Gimme judgement on these ideas.**
