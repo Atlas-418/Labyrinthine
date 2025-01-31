@@ -24,8 +24,8 @@ use crate::camera::CameraPlugin;
 use crate::cubemesh::gen_cubemesh::GenWorldPlugin;
 
 
-const MAZE_WIDTH:   u64 = 30;
-const MAZE_HEIGHT:  u64 = 30;
+const MAZE_WIDTH:   u64 = 35; // These both need to be odd numbers
+const MAZE_HEIGHT:  u64 = 35;
 #[allow(dead_code)]
 const MAX_QUESTIONS: usize = 5;
 

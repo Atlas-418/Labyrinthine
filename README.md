@@ -10,7 +10,7 @@ I plan on heavily focusing on rendering, and making sure the game runs smoothly,
 
 ## What do I want to do with it? (A TODO list for me)
 ## My goals:
-- [ ] Procedural generation of the maze
+- [X] Procedural generation of the maze
 - [ ] multiple paths, guided by riddles. Each path has it's own moral dilemma for following it
 - [ ] figure out how to incorperate said moral dilemmas into the maze, and make it solevable via hints
 
@@ -18,7 +18,7 @@ I plan on heavily focusing on rendering, and making sure the game runs smoothly,
 - [X] Get collisions and rendering
 - [X] Get a first person camera working
 - [X] move the first person camera around
-- [ ] Figure out how to proceduraly generate a maze (check out [this blog](<https://professor-l.github.io/mazes/>), will most likely use Hunt and Kill)
+- [X] Figure out how to proceduraly generate a maze (check out [this blog](<https://professor-l.github.io/mazes/>), will most likely use Hunt and Kill)
 - [X] Generate a 3D world with the procedural maze
 - [ ] Put the riddles into the maze somehow
 * Idea: Take list of junctions, apply set ammount of riddles to set ammount of junctions

@@ -21,7 +21,7 @@ http://weblog.jamisbuck.org/2011/1/24/maze-generation-hunt-and-kill-algorithm
     5. End when all cells are visited.
 */
 
-use bevy::{math::Vec2};
+use bevy::{input::touch, math::Vec2};
 #[allow(unused_imports)]
 use rand::{random, thread_rng, seq::SliceRandom};
 #[allow(unused_imports)]
@@ -79,16 +79,23 @@ impl Maze {
         };
 
         // * populates tile.adjacent cells with the adjacent cells' positions
-        let directions: [Vec2; 4] = [
+        let tile_directions: [Vec2; 4] = [
             Vec2{ x: -1.0, y: 0.0 },    // Left
             Vec2{ x: 1.0, y: 0.0},      // Right
             Vec2{ x: 0.0, y: 1.0},      // Up
             Vec2{ x: 0.0, y: -1.0},     // Down
         ];
+        let cell_directions: [Vec2; 4] = [
+            Vec2{ x: -2.0, y: 0.0 },    // Left
+            Vec2{ x: 2.0, y: 0.0},      // Right
+            Vec2{ x: 0.0, y: 2.0},      // Up
+            Vec2{ x: 0.0, y: -2.0},     // Down
+        ];
+
         for tile in maze.tiles.iter_mut() {
-            for direction in directions {
-                let next_tile = tile.position + direction;
-                let next_cell = tile.position + (direction * 2.0);
+            for direction_idx in 0..4 {
+                let next_tile = tile.position + tile_directions[direction_idx];
+                let next_cell = tile.position + cell_directions[direction_idx];
 
                 if !(next_cell.x > maze.width as f32) && !(next_cell.x < 0.0) && !(next_cell.y > maze.height as f32) && !(next_cell.y < 0.0) {
                     // if the thingymabobber is valid, put it into the other thingymabobber
@@ -134,18 +141,13 @@ impl Maze {
     }
 
     // dear jod, these function names are getting out of hand.
-    fn is_tile_at_position_open (tiles: &Vec<Tile>, position: Vec2) -> Option<bool> {
-        let mut is_open: Option<bool> = None;
+    fn is_tile_at_position_open (tiles: &Vec<Tile>, tile_position: Vec2) -> bool {
+        let mut is_open: bool = false;
         for tile in tiles {
-            match (tile.position, tile.touched) { 
-                (position, false) => {
-                    is_open = Some(true);
-                }
-                (position, true) => {
-                    is_open = Some(false)
-                }
-                _ => {}
+            if tile.position == tile_position && !tile.touched {
+                is_open = true;
             }
+
         }
         is_open
     }
@@ -154,8 +156,8 @@ impl Maze {
         let tile = self.get_tile_at_position(pos);
         for attribute in attributes {
             match attribute {
-                "wall" => tile.toggle_wall(),
-                "touched" => tile.toggle_touched(),
+                "wall" => tile.is_wall = false,//tile.toggle_wall(),
+                "touched" => tile.touched = true,//tile.toggle_touched(),
                 "question" => tile.toggle_touched(),
                 "illuminated" => tile.toggle_illuminated(),
                 _ => {}
@@ -187,7 +189,7 @@ impl Maze {
                 let mut possible_next_positions: Vec<[Vec2; 2]> = Vec::new();
                 for position in tile.adjacent.clone() {
                     let coords_valid: bool = (position[1].x < maze.width as f32) && (position[1].x > 0.0) && (position[1].y < maze.height as f32) && (position[1].y > 0.0);
-                    if Maze::is_tile_at_position_open(&all_tiles, position[1]).unwrap_or(false) && coords_valid {    // use position[1] because we only care if the next cell is open
+                    if Maze::is_tile_at_position_open(&all_tiles, position[1]) && coords_valid {    // use position[1] because we only care if the next cell is open
                         possible_next_positions.push(position);
                     }
                 }
@@ -219,12 +221,19 @@ impl Maze {
             }
 
             for cell in cells {
-                if !cell.touched {
+                let mut touched_neigbors: Vec<[Vec2; 2]> = Vec::new();
+                if Maze::is_tile_at_position_open(&maze.tiles, cell.position) {
                     for direction in directions {
-                        if !Maze::is_tile_at_position_open(&maze.tiles, cell.position + (direction * 2.0)).unwrap_or(false) {
-                            new_start = Some([cell.position + direction, cell.position + (direction * 2.0)]);
+                        let new_cell_postition: Vec2 = cell.position + (direction + direction);
+                        let coords_valid: bool = (new_cell_postition.x < maze.width as f32) && (new_cell_postition.x > 0.0) && (new_cell_postition.y < maze.height as f32) && (new_cell_postition.y > 0.0);
+
+                        if !Maze::is_tile_at_position_open(&maze.tiles, new_cell_postition) && coords_valid {
+                            touched_neigbors.push([cell.position + direction, new_cell_postition]);
                         }
                     }
+                }
+                if !touched_neigbors.is_empty() {
+                    new_start = Some(touched_neigbors[0]);
                 }
             }
             new_start
@@ -233,18 +242,14 @@ impl Maze {
         let mut maze: Maze = Maze::new(width, height, "Hunt and Kill".to_string());
 
         let mut walk_start: Option<[Vec2; 2]> = Some([Vec2{x: 0.0, y: 1.0}, Vec2{x: 1.0, y: 1.0}]);
-        
-        let mut walk_count: u16 = 0;
 
-        while walk_start != None && walk_count < 20 {
+        while walk_start != None {
             random_walk(&mut maze, walk_start.unwrap());
 
-            walk_count += 1;
-
-            //TODO:
-            //! FIX get_open_cell
-            walk_start = get_open_cell(&maze)
+            //TODO: fix get_open_cell
+            walk_start = get_open_cell(&maze);
         }
+        
 
         maze
     }
