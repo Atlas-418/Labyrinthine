@@ -21,7 +21,7 @@ http://weblog.jamisbuck.org/2011/1/24/maze-generation-hunt-and-kill-algorithm
     5. End when all cells are visited.
 */
 
-use bevy::{input::touch, math::Vec2};
+use bevy::math::Vec2;
 #[allow(unused_imports)]
 use rand::{random, thread_rng, seq::SliceRandom};
 #[allow(unused_imports)]
@@ -140,6 +140,10 @@ impl Maze {
         }
     }
 
+    fn get_num_neighbors (&mut self) {
+
+    }
+
     // dear jod, these function names are getting out of hand.
     fn is_tile_at_position_open (tiles: &Vec<Tile>, tile_position: Vec2) -> bool {
         let mut is_open: bool = false;
@@ -166,7 +170,6 @@ impl Maze {
     }
 
     //? Oh, hey, look, the rest of this impl is maze generation algorythms, and nothing else. keep it that way.
-
 
     fn hunt_and_kill (width: u64, height: u64) -> Maze {
 
@@ -246,10 +249,10 @@ impl Maze {
         while walk_start != None {
             random_walk(&mut maze, walk_start.unwrap());
 
-            //TODO: fix get_open_cell
             walk_start = get_open_cell(&maze);
         }
         
+        maze.start_position = Vec2{x: 0.5, y: 1.5};
 
         maze
     }
@@ -276,6 +279,7 @@ impl Maze {
 }
 
 // * contains all of the data for an individual tile
+#[allow(dead_code)]
 #[derive(Clone)]
 pub struct Tile {
     pub position: Vec2,
@@ -322,3 +326,4 @@ impl Tile {
     }
 
 }
+  

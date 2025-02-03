@@ -1,10 +1,11 @@
-use bevy::{core_pipeline::bloom::Bloom, math::vec3, prelude::*};
+use bevy::{math::vec3, prelude::*};
+use crate::GameState;
 
 pub struct CameraPlugin;
 impl Plugin for CameraPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, start_camera);
-        app.add_systems(Update, (cam_move, cam_rotate, update_time_display));
+        app.add_systems(OnEnter(GameState::World), start_camera);
+        app.add_systems(Update, (cam_move, cam_rotate, update_time_display).run_if(in_state(GameState::World)));
     }
 }
 
@@ -15,13 +16,12 @@ fn start_camera(mut cmd: Commands){
             hdr: true, // HDR is required for bloom
             ..default()
         },
-        //Bloom::NATURAL,  // do we even like having bloom?
         PointLight {
             shadows_enabled: false,
-            intensity: 700000.0,
+            intensity: 7500.0,
             ..default()
         },
-        Transform::from_xyz(crate::MAZE.start_position.x, 0.0, crate::MAZE.start_position.y).looking_at(Vec3{x: 1.0, y: 0.0, z: 0.0}, Vec3::Y),
+        Transform::from_xyz(crate::MAZE.start_position.x, 0.0, crate::MAZE.start_position.y).looking_at(Vec3{x: 0.5, y: 0.0, z: 1.5}, Vec3::Y),
     ));
     cmd.spawn((
         Text::new("Scoring: \n   Time elapsed: \n   Morality score: \n   Choices made: \n\nMaze data: \n   Generation type: \n   Dimensions: \n   Total questions: \n "),
@@ -50,7 +50,24 @@ fn update_time_display (
     text.0 = display_text;
 }
 
-fn check_for_clipping(position: Vec3) -> bool {
+// * Checks if the camera's x and y position is within 1 unit of the provided vec2
+fn cam_is_at_position (
+    position: Vec2,
+    query: Query<&Transform, With<Camera3d>>,
+) -> bool {
+    let mut is_at_pos = false;
+    for cam_position in &query {
+        if 
+        (cam_position.translation.x - position.x).abs() <= 0.6 &&
+        (cam_position.translation.y - position.y).abs() <= 0.6
+        {
+            is_at_pos = true;
+        }
+    }
+    is_at_pos
+}
+
+fn check_collision(position: Vec3) -> bool {
     let mut is_clipping = false;
     for tile in &crate::MAZE.tiles {
 
@@ -70,6 +87,7 @@ fn check_for_clipping(position: Vec3) -> bool {
     is_clipping
 }
 
+// * takes user input, and moves the camera accordingly
 fn cam_move (
     keyboard_input: Res<ButtonInput<KeyCode>>,
     //cam_query: Query<&Camera3d>,
@@ -116,15 +134,16 @@ fn cam_move (
         if keyboard_input.pressed(KeyCode::ShiftLeft) {
             movement -= Vec3:: Y * movespeed;
         }
-        if check_for_clipping(transform.translation) {
+        if check_collision(transform.translation) {
             transform.translation = vec3(-1.0, 0.0, -1.0)
         }
-        if !check_for_clipping(transform.translation + (movement * time.delta_secs())) {
+        if !check_collision(transform.translation + (movement * time.delta_secs())) {
             transform.translation += movement * time.delta_secs();
         }
     }
 }
 
+// * takes user input, and rotates the camera accordingly
 fn cam_rotate(
     keyboard_input: Res<ButtonInput<KeyCode>>,
     mut query: Query<&mut Transform, With<Camera3d>>,

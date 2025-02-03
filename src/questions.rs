@@ -77,17 +77,25 @@ pub fn give_questions (num_questions: usize) -> Vec<Question> {
         0.5
         ),
         
-
+        Question::new(
+            "You are going grocery shopping. Your local small-town grocery store gets its food shipped in from halfway around the world from sources known to use slave labour. There is a bigger, more successful supermarket that only sells ethically sourced goods. You must choose whether to support a local business, but also by extension slavery, or to buy from a big company that gets better foods.",
+            "Get the ethically sourced food",
+            "Support the local business, but also slavery",
+            0.5
+        ),
+        
 
     ];
+    
+    let num_questions_but_real: usize = if num_questions >= crate::MAX_QUESTIONS {crate::MAX_QUESTIONS} else {num_questions};
 
-    if num_questions < questions.len() {
+    if num_questions_but_real < questions.len() {
         // remove however many elements are excess
-        for _ in 0..(questions.len() - num_questions) {
+        for _ in 0..(questions.len() - num_questions_but_real) {
 
             //? Don't ask I stole it from StackOverFlow, it just removes a random element.
             let index = (rand::random::<f32>() * questions.len() as f32).floor() as usize;
-            let value = questions.remove( index );
+            let _ = questions.remove( index );
         }
 
         questions
