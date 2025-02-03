@@ -51,7 +51,7 @@ fn setup_menu (mut cmd: Commands) {
                 TextLayout::new_with_justify(JustifyText::Center),
             ));
             parent.spawn((
-                Text::new("Labyrinthine is A small project made for the FBLA 2024-25 game design & simulation challenge. \nWhen playing the game, the player is put into a randomly generated maze, in which they will find themselves prompted with multiple moral dillemmas. The player's choices for each dilemma will affect their score, which is a percentage. The score percentage is directly related to how visible the path to the end of the maze is, encoraging the player to make the \"good\" decision, letting them escape the maze faster."),
+                Text::new("Labyrinthine is A small project made for the FBLA 2024-25 game design & simulation challenge. \nWhen playing the game, the player is put into a randomly generated maze, in which they will find themselves prompted with multiple moral dillemmas. The player's choices for each dilemma will affect their score, which is a percentage. The score percentage is directly related to how visible the path to the end of the maze is, encoraging the player to make the \"good\" decision, letting them escape the maze faster.\nThe source code can be found at github.com/Atlas-418/Labyrinthine"),
             ));
 
             parent.spawn((
